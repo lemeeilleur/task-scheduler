@@ -1,3 +1,4 @@
+// знаходимо елементи на сторінці
 let form = document.querySelector('#form')
 let taskInput = document.querySelector('#taskInput')
 let tasksList = document.querySelector('#tasksList')
@@ -13,19 +14,19 @@ if(localStorage.getItem('tasks')) {
 checkEmptyList();
 
 form.addEventListener('submit', addTask)
-
 tasksList.addEventListener('click', deleteTask)
-
 tasksList.addEventListener('click', doneTask)
 
 
-
+// функції
 function addTask(event) {
+    // скасуємо відправлення форми
     event.preventDefault();
     
-    // дістаємо завдання з поля введення
+    // дістаємо текст завдання з поля введення
     let taskText = taskInput.value
 
+    // Описуємо завдання у вигляді об'єкта
     let newTask = {
         id: Date.now(),
         text: taskText,
@@ -34,12 +35,17 @@ function addTask(event) {
 
     // додаємо завдання в масив із завданнями
     tasks.push(newTask)
+
+    // зберігаємо список завдань у сховищі браузера localStorage
     saveToLocalStorage();
 
+    // рендерим завдання на сторінці
     renderTask(newTask);
 
+    // очищаємо поле введення та повертаємо на нього фокус
     taskInput.value = ""
     taskInput.focus()
+
     checkEmptyList()
 }
 
@@ -60,6 +66,8 @@ function deleteTask(event) {
     });
 
     tasks.splice(index, 1)
+
+    // зберігаємо список завдань у сховищі браузера localStorage
     saveToLocalStorage()
 
     // видаляємо завдання
@@ -68,10 +76,12 @@ function deleteTask(event) {
 }
 
 function doneTask(event) {
+    // перевіряємо якщо клік був не по кнопці завдання виконано
     if(event.target.dataset.action !== 'done') return;
 
     let parentNode = event.target.closest('.list-group-item')
 
+    // визначаємо ID завдання
     let id = Number(parentNode.id);
 
     let task = tasks.find(function (task) {
@@ -81,6 +91,8 @@ function doneTask(event) {
     })
 
     task.done = !task.done
+
+    // зберігаємо список завдань у сховищі браузера localStorage
     saveToLocalStorage()
 
     let taskTitle = parentNode.querySelector('.task-title')
@@ -107,7 +119,10 @@ function saveToLocalStorage() {
 }
 
 function renderTask(task) {
+    // формуємо CSS клас
     let cssClass = task.done ? 'task-title task-title--done' : 'task-title';
+
+    // формуємо розмітку для нового завдання
     let taskHTML = `<li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
 					<span class="${cssClass}">${task.text}</span>
 					<div class="task-item__buttons">
@@ -119,5 +134,7 @@ function renderTask(task) {
 						</button>
 					</div>
 				</li>`;
+
+    // Додаємо завдання на сторінку
     tasksList.insertAdjacentHTML('beforeend', taskHTML)
 }
