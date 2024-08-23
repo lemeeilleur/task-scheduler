@@ -335,3 +335,7 @@ margin-bottom: 30px;
 ::placeholder {
   color: #fff;
 }
+
+.container-title {
+  max-width: 1140px;
+}
